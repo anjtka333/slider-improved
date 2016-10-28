@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="jquery-3.1.0.min.js"></script>
+    <style>
+        #bigImg img {
+            width: 300px;
+            height: 300px;
+           background-size: cover;
+        }
+        #invisible img {
+            width: 100px;
+            height: 100px;
+            background-size: cover;
+        }
+        #invisible {
+            position: absolute;
+            top: 150px;
+            left: 35px;
+            width: 100px;
+            overflow: hidden;
+            display: block;
+            opacity: 0;
+        }
+        #invisible ul {
+            display: flex;
+            padding-left: 0px;
+        }
+        li {
+            list-style: none;
+/*            float: left;*/
+            display: inline-flex;
+            
+        }
+        #bigImg{
+            display: flex;
+            margin-left: 0px;
+            padding-left: 0px;
+        }
+        #wrapper {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            overflow: hidden;
+            margin: auto;
+        }
+        #arrow_wrapper {
+            height: 30px;
+            width: 30px;
+            position: absolute;
+            top: 142px;
+            left: 268px;
+            
+        }
+        #arrow_wrapper2{
+            height: 30px;
+            width: 30px;
+            position: absolute;
+            top: 142px;
+            left: 0px;
+            transform: rotate(180deg);
+        }
+        #arrow {
+            width: 30px;
+            height: 30px;
+            opacity: 0;
+        }
+        #arrow2{
+             width: 30px;
+            height: 30px;
+            opacity: 0;
+        }
+        form {
+            position: absolute;
+    top: 270px;
+    left: 80px;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+       <div id="invisible">
+           <ul>
+           <li><img src="img/b1.JPG"></li>
+            <li><img src="img/b2.jpg"></li>
+            <li><img src="img/b3.jpg"></li>
+            <li><img src="img/b4.jpg"></li>
+            <li><img src="img/b5.jpg"></li>
+            <li><img src="img/b6.jpg"></li>
+        </ul>
+       </div>
+        <ul id="bigImg">
+            <li><img src="img/b1.JPG"></li>
+            <li><img src="img/b2.jpg"></li>
+            <li><img src="img/b3.jpg"></li>
+            <li><img src="img/b4.jpg"></li>
+            <li><img src="img/b5.jpg"></li>
+            <li><img src="img/b6.jpg"></li>
+        </ul>
+        <form action="#" name="rbtns">
+                    <input type="radio" name="slide" value="0" checked>
+                    <input type="radio" name="slide" value="1">
+                    <input type="radio" name="slide" value="2">
+                    <input type="radio" name="slide" value="3">
+                    <input type="radio" name="slide" value="4">
+                    <input type="radio" name="slide" value="5">
+                    
+                </form>        
+        <div id="arrow_wrapper"><img src="img/next.png"id="arrow"></div>
+        <div id="arrow_wrapper2"><img src="img/next.png"id="arrow2"></div>
+    </div>
+    <script>
+        var $sliderImg =$("#bigImg").find("li");
+        var $sliderWidth=$("#bigImg").width();
+        var interval;
+        console.log($sliderImg.length);
+        
+            var i=0;
+        $("#arrow_wrapper, #arrow_wrapper2").on("mouseover",function(){
+            console.log('bl');
+            $("#arrow").animate({opacity:1});
+             $("#arrow2").animate({opacity:1});
+        });
+        $("#arrow_wrapper, #arrow_wrapper2").on("mouseout",function(){
+            console.log('bl');
+            $("#arrow").animate({opacity:0});
+             $("#arrow2").animate({opacity:0});
+        });
+        $("#arrow_wrapper").on ("click",function(){
+                    i++;
+                if (i===$sliderImg.length){
+                    i=0;
+                     $("input[name=slide]")[i].checked=true;
+                    console.log($("input[name=slide]")[i])
+                  $("#bigImg").css({'margin-left':"0"});  }
+                    else {
+                              $("input[name=slide]")[i].checked=true; 
+                         $("#bigImg").animate({
+                             "margin-left":"-="+$sliderWidth
+                         },1000,function(){
+                         });
+                    }
+                        });
+        $("#arrow_wrapper2").on("click",function(){
+            console.log(i);
+            if(i===0){
+            i=$sliderImg.length-1;
+                     $("input[name=slide]")[i].checked=true; 
+                console.log(i);
+                $("#bigImg").css({'margin-left':-$sliderWidth*($sliderImg.length-1)});  
+                console.log("-"+$sliderWidth*($sliderImg.length-1));
+            }
+            else{
+                           $("input[name=slide]")[i-1].checked=true;    
+                $("#bigImg").animate({
+                             "margin-left":"+="+$sliderWidth
+                         },1000,function(){
+                    console.log(i);
+                             i--;
+                         });
+                                
+                                }
+        });
+        
+        function startSlider() {
+            interval= setInterval(function(){
+                
+                i++;
+                if (i===$sliderImg.length){
+                    i=0;
+                     $("input[name=slide]")[i].checked=true;
+                    console.log($("input[name=slide]")[i])
+                  $("#bigImg").css({'margin-left':"0"});  }
+                    else {
+                              $("input[name=slide]")[i].checked=true; 
+                         $("#bigImg").animate({
+                             "margin-left":"-="+$sliderWidth
+                         },1000,function(){
+                         });
+                    } },3000);}
+        
+        startSlider();
+        function stopSlider(){
+            clearInterval(interval);}
+        $("#bigImg").on("mouseleave",startSlider
+        ).on("mouseenter",stopSlider);
+        $("#arrow_wrapper").on("mouseenter",stopSlider).on("mouseleave",startSlider);
+        $("#arrow_wrapper2").on("mouseenter",stopSlider).on("mouseleave",startSlider);
+        $("form").on("mouseenter",stopSlider).on("mouseleave",startSlider);
+        $("input[name=slide]").on("click",function(){
+    $("#bigImg").animate({'margin-left':-$(this).val()*300+"px"},1000);
+            i=$(this).val();
+            console.log($(this).val())
+        });
+         $("input[name=slide]").on("mouseenter",function(){
+            $("#invisible").css({"opacity":1,"left":($(this).position().left)+35});
+             $("#invisible ul").css({"margin-left":-$(this).val()*100+"px"});
+        });
+        $("input[name=slide]").on("mouseleave",function(){
+                $("#invisible").css({"opacity":0});
+        });
+        $("#invisible img").on("mouseenter",function(){
+                $("#invisible").css({"opacity":1});
+        });
+        $("#invisible img").on("mouseleave",function(){
+            $("#invisible").css({"opacity":0});
+        });
+        $("#invisible img").on("click",function(){
+            var margin = -parseInt($("#invisible ul").css("margin-left"))/100;
+            console.log(margin);
+            $("input[name=slide]")[margin].click();
+            });
+        
+    </script>
+</body>
+</html>
